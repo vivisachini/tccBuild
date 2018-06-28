@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+        <title>Cadastro</title>
+    </head>
+    <body class="page">
+		<div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+			<div class="toolbar__left toolbar-centralizar" >
+				<span class="toolbar-button"><a href="receitas.html"><img class="imgBack" src="img/back.png" style="padding-top:10px;"></a></span>
+			</div>
+
+			<div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+			<div class="toolbar__right toolbar-centralizar">
+				<span class="toolbar-button" id="registrarReceita"><img src="img/checked-user.png" style="padding-top:10px;"></span>
+			</div>
+		</div>
+
+        <ul class="list">
+                <li class="list-item">
+                    <div class="list-item__title list-item--material__title css-header" style="padding-top:60px;">Título: </div>
+                </li>
+                <span>
+                    <div><input class="text-input text-input--material textoAdc" type="text" id="titulo" placeholder="ex: Torta Integral de Atum" style="padding: 20px 20px; width:100%" required=""></div>
+                </span>
+                <li class="list-item">
+                   <div class="list-item__title list-item--material__title css-header">Tempo preparo: </div>
+                </li>
+                <span>
+                    <div><input class="text-input text-input--material textoAdc" type="text" id="preparo" placeholder="ex: 45 min" style="padding: 20px 20px; width:100%" required=""></div>
+                </span>
+                <li class="list-item">
+                    <div class="list-item__title list-item--material__title css-header">Rendimento: </div>
+                </li>
+                <span>
+                    <div><input class="text-input text-input--material textoAdc" type="text" id="rendimento" placeholder="ex: 12 porções" style="padding: 20px 20px; width:100%" required=""></div>
+                </span>
+                <li class="list-item">
+                    <div class="list-item__title list-item--material__title css-header">Calorias: </div>
+                </li>
+                <span>
+                    <div><input class="text-input text-input--material textoAdc" type="text" id="calorias" placeholder="ex: 270" style="padding: 20px 20px; width:100%" required=""></div>
+                </span>
+                <li class="list-item">
+                        <div class="list-item__title list-item--material__title css-header">Ingredientes: </div>
+                    </li>
+                <span>
+                    <div><textarea class="textarea" rows="4" id="ingredientes" placeholder="ex: 3 colheres de sopa de farinha de castanha" style="margin-left: 10px; margin-top:10px; width:95%;padding: 10px 10px;"></textarea></div>
+                </span>
+                <li class="list-item">
+                        <div class="list-item__title list-item--material__title css-header">Modo de preparo: </div>
+                    </li>
+                <span>
+                    <div><textarea class="textarea" rows="4" id="modopreparo" placeholder="ex: Coloque todos os ingredientes no liquidificador." style="margin: 10px 10px; width:95%;padding: 10px 10px;"></textarea></div>
+                </span>
+            </ul>
+    
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+		<script type="text/javascript" src="js/conexaoBD.js"></script>
+	</body>
+</html>

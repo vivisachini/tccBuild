@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="css/menu.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+		<title>Painel de Controle</title>
+	</head>
+	<body class="page">
+		<div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+			<div class="toolbar__left toolbar-centralizar" >
+				<span class="toolbar-button" id="menu"><img src="img/menu.png" style="padding-top:10px;"></span>
+			</div>
+
+			<div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+			<div class="toolbar__right toolbar-centralizar">
+				<span class="toolbar-button" id="finalizarDiario"><img src="img/checked-user.png" style="padding-top:10px;"></span>
+			</div>
+		</div>
+
+		<nav class="menu" style="display: none;padding-top: 39px;">
+			<ul>
+				<li><a href="painelControle.html">Painel Controle</a></li>
+				<li><a href="#">Receitas</a>
+					<ul>
+						<li><a href="receitas50.html" id="ate50cal">Até 50 calorias</a></li>
+						<li><a href="receitas100.html" id="menorQ100">Entre 50 e 100 calorias</a></li>
+						<li><a href="receitas101.html" id="maiorQ100">Acima de 100 calorias</a></li>
+						<li><a href="receitas.html" id="todas">Todas</a></li>
+					</ul>
+				</li>
+			</ul>
+		</nav>
+
+		<div id="esconderPainel">
+			<ul class="list list--material" id="refeicoes">
+				<li class="list-header list-header--material" style="font-weight: bold;font-size: 20px;color: #0a3d62; padding-top:60px;" id="cafe">
+					Diário: Alimentos Consumidos
+				</li>
+
+				<li id="itemDiario" style="display: none;">
+					<div class="botaoLista"><button class="designBotao2" id="deletar" onclick="deletarAlimento(this.id)"> X </button></div>
+					<div class="tituloLista" id="tituloRefeicao">Teste</div>
+					<div class="subtituloLista" id="caloriasRefeicao">Subtitulo</div>
+				</li>
+				<li class="separador" style="display: none;" id="separador"></li>
+
+				<li class="list-item list-item--material css-material">
+					<div class="list-item__center list-item--material__center">
+						<div class="list-item__title list-item--material__title"><a href="buscaAlimento.html" class="adcAlimento">Adicionar alimento...</a></div>
+					</div>
+				</li>
+			</ul>
+		</div>
+			
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+		<script type="text/javascript" src="js/conexaoBD.js"></script>
+		<script>
+			$('#menu').on('click', function () {
+				$(".menu").css("display", "block");
+				$("#esconderPainel").css("display", "none");
+			});
+
+			bd = window.openDatabase('bd_nutricao', 1, 'Base de Dados', 2 * 1024 * 1024);
+
+			bd.transaction(function(tx) {
+				tx.executeSql('SELECT * FROM TB_REFEICOES', [], function (tx, results2) { 
+					var n = results2.rows.length;
+					for(var i = 0;i < n;i++) {
+						var listaAlimentos = results2.rows.item(i);
+						var clone = $('#esconderPainel li#itemDiario').clone().removeAttr('id').appendTo('#esconderPainel ul#refeicoes').show();
+						clone.find('button#deletar').attr('id', 'deleteReceita' + listaAlimentos.id);
+						clone.find('#tituloRefeicao').attr('id', 'tituloAlimento' + listaAlimentos.id).text(listaAlimentos.titulo);
+						clone.find('#caloriasRefeicao').attr('id', 'caloriasAlimento' + listaAlimentos.id).text(listaAlimentos.calorias + ' calorias');
+						var clone2 = $('#esconderPainel li#separador').clone().removeAttr('id').appendTo('#esconderPainel ul#refeicoes').show();
+                    	clone.find('.separador').attr('id', 'separador' + listaAlimentos.id);
+					}
+				});
+			});
+
+			function deletarAlimento(valor) {
+				var deletar = valor;
+				var informacaoBotao = deletar.split("a");
+				idDelete = informacaoBotao[1];
+				console.log(idDelete);
+				var escolha = confirm("Tem certeza que deseja excluir este item?");
+
+				if(escolha){
+					bd.transaction(function(tx) {
+						tx.executeSql('DELETE FROM TB_REFEICOES WHERE id = ?', [idDelete]);
+					});
+					window.location.href = 'painelControle.html';
+				}else{
+					return false;
+				}
+        	}
+
+			$('#finalizarDiario').on('click', function () {
+				var escolha = confirm("Tem certeza que deseja finalizar seu diário?");
+
+				if(escolha){
+					bd.transaction(function(tx) {
+						tx.executeSql('SELECT * FROM TB_REFEICOES', [], function (tx, results) { 
+							var n = results.rows.length;
+							for(var i = 0;i < n;i++) {
+								var cadaAlimento = results.rows.item(i);
+								tx.executeSql('INSERT INTO TB_DIARIO(titulo, calorias) VALUES (?, ?)', 
+									[cadaAlimento.titulo,cadaAlimento.calorias], function(tx, results2) {
+										tx.executeSql('DELETE FROM TB_REFEICOES', []);
+										window.location.href = 'painelControle.html';
+								});
+							}
+						});
+					});
+				}else{
+					return false;
+				}
+			});
+
+		</script>
+	</body>
+</html>

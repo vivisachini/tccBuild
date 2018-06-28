@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Receitas</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+	<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+    <link rel="stylesheet" type="text/css" href="css/index.css">
+    <link rel="stylesheet" type="text/css" href="css/menu.css">
+	<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+	<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+</head>
+<body class="page">
+    
+    <div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+        <div class="toolbar__left toolbar-centralizar" >
+            <span class="toolbar-button" id="menu"><img src="img/menu.png" style="padding-top:10px;"></span>
+        </div>
+
+        <div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+        <div class="toolbar__right toolbar-centralizar">
+            <span class="toolbar-button" id="novaReceita"><img src="img/novo.png" style="padding-top:10px;"></span>
+        </div>
+    </div>
+
+    <nav class="menu" style="display: none;padding-top: 39px;">
+        <ul>
+            <li><a href="painelControle.html">Painel Controle</a></li>
+            <li><a href="#">Receitas</a>
+                <ul>
+                    <li><a href="receitas50.html" id="ate50cal">Até 50 calorias</a></li>
+                    <li><a href="receitas100.html" id="menorQ100">Entre 50 e 100 calorias</a></li>
+                    <li><a href="receitas101.html" id="maiorQ100">Acima de 100 calorias</a></li>
+                    <li><a href="receitas.html" id="todas">Todas</a></li>
+                </ul>
+            </li>
+        </ul>
+    </nav>
+
+    <input type="search" value="" placeholder="Search" class="search-input" id="campoPesquisa" style="margin-top: 55px;">
+
+    <div id="listagemReceitas">
+        <ul>
+            <li id="itemReceita" style="display: none;">
+                <div class="botaoLista"><button class="designBotao2" id="deletar" onclick="deletarReceita(this.id)"> X </button></div>
+                <div class="botaoLista"><button class="designBotao" id="informacao" onclick="verReceita(this.id)">Ver</button></div>
+                <div class="tituloLista" id="tituloReceita">Teste</div>
+                <div class="subtituloLista" id="caloriasReceita">Subtitulo</div>
+            </li>
+            <li style="display:none" class="separador" id="separador"></li>
+        </ul>
+    </div>
+
+    <div id="infoReceitas">
+        <ul>
+            <li style="display:none" id="cadaReceita">
+                <div id="tituloReceitaAtual">Titulo</div>
+                <div id="tempoDePreparo">Tempo Preparo</div>
+                <div id="rendimentoReceita">Rendimento</div>
+                <div id="caloriasDaReceita">Calorias</div>
+                <div id="ingredientesReceita">Ingredientes</div>
+                <div id="modoPreparo">Modo Preparo</div>
+            </li>
+        </ul>
+    </div>
+
+    <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+    <script type="text/javascript" src="js/conexaoBD.js"></script>
+    <script type="text/javascript" src="js/inserirReceitasBD.js"></script>
+    <script>
+
+        $('#menu').on('click', function () {
+            $(".menu").css("display", "block");
+        });
+
+        $('#novaReceita').on('click', function () {
+            window.location.href = 'cadastroReceitas.html';
+        });
+
+        bd = window.openDatabase('bd_nutricao', 1, 'Base de Dados', 2 * 1024 * 1024);
+    
+        bd.transaction(function(tx) {
+			tx.executeSql('SELECT * FROM TB_RECEITAS WHERE calorias BETWEEN 50 AND 100 ORDER BY calorias ASC', [], function (tx, results) { 
+				var n = results.rows.length;
+				for(var i = 0;i < n;i++) {
+					var listaReceitas = results.rows.item(i);
+					var clone = $('#listagemReceitas li#itemReceita').clone().removeAttr('id').appendTo('#listagemReceitas ul').show();
+                    clone.find('button#deletar').attr('id', 'deleteReceita' + listaReceitas.id);
+                    clone.find('button#informacao').attr('id', 'receita' + listaReceitas.id);
+                    clone.find('#tituloReceita').attr('id', 'tituloReceita' + listaReceitas.id).html(listaReceitas.titulo);
+					clone.find('#caloriasReceita').attr('id', 'caloriasReceita' + listaReceitas.id).html(listaReceitas.calorias + ' calorias');
+                    var clone2 = $('#listagemReceitas li#separador').clone().removeAttr('id').appendTo('#listagemReceitas ul').show();
+                    clone.find('.separador').attr('id', 'separador' + listaReceitas.id);
+                }
+			});
+        });
+
+        function verReceita(valor) {
+            var botao = valor;
+            var informacaoBotao = botao.split("a");
+            idReceita = informacaoBotao[1];
+            $('#listagemReceitas').hide();
+            bd.transaction(function(tx) {
+                tx.executeSql('SELECT * FROM TB_RECEITAS', [], function (tx, results2) { 
+                    var n = results2.rows.length;
+                    for(var i = 0;i < n;i++) {
+                        var visualizarReceita = results2.rows.item(i);
+                        if(visualizarReceita.id == idReceita){
+                            var clone = $('#infoReceitas li#cadaReceita').clone().removeAttr('id').appendTo('#infoReceitas ul').show();
+                            clone.find('#tituloReceitaAtual').attr('id', 'titulo' + visualizarReceita.id).html(visualizarReceita.titulo + '<br><br>');
+                            clone.find('#tempoDePreparo').attr('id', 'tempoDePreparo' + visualizarReceita.id).html(visualizarReceita.tempoPrep + '<br><br>');
+                            clone.find('#rendimentoReceita').attr('id', 'rendimentoReceita' + visualizarReceita.id).html(visualizarReceita.rendimento + '<br><br>');
+                            clone.find('#caloriasDaReceita').attr('id', 'caloriasDaReceita' + visualizarReceita.id).html(visualizarReceita.calorias + ' calorias por porção<br><br>');
+                            clone.find('#ingredientesReceita').attr('id', 'ingredientesReceita' + visualizarReceita.id).html('Ingredientes:<br><br>' + visualizarReceita.ingredientes);
+                            clone.find('#modoPreparo').attr('id', 'modoPreparoReceita' + visualizarReceita.id).html('Modo Preparo:<br><br>' + visualizarReceita.modoPreparo);
+                        }
+                    }
+                });
+            });
+        }
+
+        function deletarReceita(valor) {
+            var deletar = valor;
+            var informacaoBotao = deletar.split("a");
+            idDelete = informacaoBotao[1];
+            console.log(idDelete);
+            var escolha = confirm("Tem certeza que deseja excluir este item?");
+
+            if(escolha){
+                bd.transaction(function(tx) {
+                    tx.executeSql('DELETE FROM TB_RECEITAS WHERE id = ?', [idDelete]);
+                });
+				window.location.href = 'receitas.html';
+			}else{
+				return false;
+            }
+        }
+
+
+    </script>
+</body>
+</html>

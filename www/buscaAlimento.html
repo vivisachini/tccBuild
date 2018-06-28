@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+		<title>Buscar Alimento</title>
+	</head>
+	<body class="page" id="exibeDadosBD">
+		<div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+			<div class="toolbar__left toolbar-centralizar" >
+				<span class="toolbar-button"><a href="painelControle.html"><img class="imgBack" src="img/back.png" style="padding-top:10px;"></a></span>
+			</div>
+
+			<div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+			<div class="toolbar__right toolbar-centralizar">
+				<span class="toolbar-button"><a href="adcItem.html"><img src="img/novo.png" style="padding-top:10px;"></a></span>
+			</div>
+		</div>
+		
+		<input type="search" value="" placeholder="Search" class="search-input" id="campoPesquisa">
+		
+	
+		<div id="lista-visivel-alimentos">
+			<ul class="list list--inset">
+			  <li style="display:none" class="list-item list--inset__item list-item--chevron list-item--tappable listaAlimento" id="listaAlimento">
+				<div class="list-item__center">
+					<div class="list-item__title" id="tipoAlimento">Banana</div>
+					<div class="list-item__subtitle" id="qtdAlimento" >1 porção</div>
+				</div>
+				<div class="list-item__right">
+					<div class="list-item__label" style="margin-right: 20px;"><button class="button--quiet" id="caloriasAlimento" onclick="verAlimento(this.id)">98 calorias</button></div>
+				</div>
+			  </li>
+			</ul>
+		</div>
+
+		<div id="infoAlimento" style="padding-top: 5px;">
+			<ul>
+				<li style="display:none" id="cadaAlimento">
+					<button id="selecionarAlimento" class="botaoSelecaoAlimento" onclick="selecaoAlimento(this.id)">Selecionar Alimento</button>
+					<div id="nomeAlimento">Nome</div>
+					<div id="marcaAlimento">Marca</div>
+					<div id="tamPorcaoAlimento">Tamanho Porção</div>
+					<div id="numPorcoesAlimento">Número de Porções</div>
+					<div id="caloriasAlimento">Calorias</div>
+					<div id="carboAlimento">Carboidratos</div>
+					<div id="protAlimento">Proteínas</div>
+					<div id="gordTotAlimento">Gorduras Totais</div>
+					<div id="gordSatAlimento">Gorduras Saturadas</div>
+					<div id="gordPoliAlimento">Gorduras Poliinsaturadas</div>
+					<div id="monoinsatAlimento">Gorduras Monoinsaturadas</div>
+					<div id="gordTransAlimento">Gorduras Trans</div>
+					<div id="colestAlimento">Colesterol</div>
+					<div id="sodioAlimento">Sódio</div>
+					<div id="potassioAlimento">Potássio</div>
+					<div id="fibrasAlimento">Fibras</div>
+					<div id="acucarAlimento">Açúcares</div>
+					<div id="vitAAlimento">Vitamina A</div>
+					<div id="vitCAlimento">Vitamina C</div>
+					<div id="calcioAlimento">Cálcio</div>
+					<div id="ferroAlimento">Ferro</div>
+				</li>
+			</ul>
+		</div>
+		
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+		<script type="text/javascript" src="js/conexaoBD.js"></script>
+		<script>
+			bd = window.openDatabase('bd_nutricao', 1, 'Base de Dados', 2 * 1024 * 1024);
+	
+			bd.transaction(function(tx) {
+				tx.executeSql('SELECT * FROM TB_ALIMENTOS', [], function (tx, results2) { 
+					var n = results2.rows.length;
+					for(var i = 0;i < n;i++) {
+						var listaAlimentos = results2.rows.item(i);
+						var clone = $('#lista-visivel-alimentos li#listaAlimento').clone().removeAttr('id').appendTo('#lista-visivel-alimentos ul').show();
+						clone.find('#tipoAlimento').attr('id', 'tipoAlimento' + listaAlimentos.id).text(listaAlimentos.alimento);
+						clone.find('#qtdAlimento').attr('id', 'qtdAlimento' + listaAlimentos.id).text(listaAlimentos.tamPorcao + ' porção');
+						clone.find('#caloriasAlimento').attr('id', 'caloriasAlimento' + listaAlimentos.id).text(listaAlimentos.calorias + ' calorias');
+					}
+				});
+			});
+
+			function verAlimento(valor) {
+				var valorAlimento = valor;
+				var informacaoBotao = valorAlimento.split("to");
+				idAlimento = informacaoBotao[1];
+				$('#campoPesquisa').hide();
+				$('#lista-visivel-alimentos').hide();
+				$('#selecionarAlimento').show();
+				bd.transaction(function(tx) {
+					tx.executeSql('SELECT * FROM TB_ALIMENTOS', [], function (tx, results3) { 
+						var n = results3.rows.length;
+						for(var i = 0;i < n;i++) {
+							var visualizarAlimento = results3.rows.item(i);
+							if(visualizarAlimento.id == idAlimento){
+								var clone = $('#infoAlimento li#cadaAlimento').clone().removeAttr('id').appendTo('#infoAlimento ul').show();
+								clone.find('#selecionarAlimento').attr('id', 'button' + visualizarAlimento.id).text('Selecionar Alimento');
+								clone.find('#nomeAlimento').attr('id', 'nomeAlimento' + visualizarAlimento.id).html(visualizarAlimento.alimento + '<br><br>');
+								clone.find('#marcaAlimento').attr('id', 'marcaAlimento' + visualizarAlimento.id).html('Marca: ' + visualizarAlimento.marca + '<br><br>');
+								clone.find('#tamPorcaoAlimento').attr('id', 'tamPorcaoAlimento' + visualizarAlimento.id).html('Tamanho porção: ' + visualizarAlimento.tamPorcao + '<br><br>');
+								clone.find('#numPorcoesAlimento').attr('id', 'numPorcoesAlimento' + visualizarAlimento.id).html('Número de porções: ' + visualizarAlimento.numPorcoes + '<br><br>');
+								clone.find('#caloriasAlimento').attr('id', 'caloriasAlimento' + visualizarAlimento.id).html('Calorias: ' + visualizarAlimento.calorias + '<br><br>');
+								clone.find('#carboAlimento').attr('id', 'carboAlimento' + visualizarAlimento.id).html('Carboidratos: ' + visualizarAlimento.carbo + '<br><br>');
+								clone.find('#protAlimento').attr('id', 'protAlimento' + visualizarAlimento.id).html('Proteínas: ' + visualizarAlimento.prot + '<br><br>');
+								clone.find('#gordTotAlimento').attr('id', 'gordTotAlimento' + visualizarAlimento.id).html('Gorduras totais: ' + visualizarAlimento.gordTot + '<br><br>');
+								clone.find('#gordSatAlimento').attr('id', 'gordSatAlimento' + visualizarAlimento.id).html('Gorduras saturadas: ' + visualizarAlimento.gordSat + '<br><br>');
+								clone.find('#gordPoliAlimento').attr('id', 'gordPoliAlimento' + visualizarAlimento.id).html('Gorduras poliinsaturadas: ' + visualizarAlimento.gordPoli + '<br><br>');
+								clone.find('#monoinsatAlimento').attr('id', 'monoinsatAlimento' + visualizarAlimento.id).html('Gorduras monoinsaturadas: ' + visualizarAlimento.monoinsat + '<br><br>');
+								clone.find('#gordTransAlimento').attr('id', 'gordTransAlimento' + visualizarAlimento.id).html('Gorduras trans: ' + visualizarAlimento.gordTrans + '<br><br>');
+								clone.find('#colestAlimento').attr('id', 'colestAlimento' + visualizarAlimento.id).html('Colesterol: ' + visualizarAlimento.colest + '<br><br>');
+								clone.find('#sodioAlimento').attr('id', 'sodioAlimento' + visualizarAlimento.id).html('Sódio: ' + visualizarAlimento.sodio + '<br><br>');
+								clone.find('#potassioAlimento').attr('id', 'potassioAlimento' + visualizarAlimento.id).html('Potássio: ' + visualizarAlimento.potassio + '<br><br>');
+								clone.find('#fibrasAlimento').attr('id', 'fibrasAlimento' + visualizarAlimento.id).html('Fibras: ' + visualizarAlimento.fibras + '<br><br>');
+								clone.find('#acucarAlimento').attr('id', 'acucarAlimento' + visualizarAlimento.id).html('Açúcar: ' + visualizarAlimento.acucar + '<br><br>');
+								clone.find('#vitAAlimento').attr('id', 'vitAAlimento' + visualizarAlimento.id).html('Vitamina A: ' + visualizarAlimento.vitA + '<br><br>');
+								clone.find('#vitCAlimento').attr('id', 'vitCAlimento' + visualizarAlimento.id).html('Vitamina C: ' + visualizarAlimento.vitC + '<br><br>');
+								clone.find('#calcioAlimento').attr('id', 'calcioAlimento' + visualizarAlimento.id).html('Cálcio: ' + visualizarAlimento.calcio + '<br><br>');
+								clone.find('#ferroAlimento').attr('id', 'ferroAlimento' + visualizarAlimento.id).html('Ferro: ' + visualizarAlimento.ferro + '<br><br>');
+							}
+						}
+					});
+				});
+        	}
+
+		function selecaoAlimento(valor1) {
+			var idBotaoSelect = valor1;
+			var informacaoBotao = idBotaoSelect.split("n");
+			var alimento = informacaoBotao[1];
+			console.log(alimento);
+
+
+			bd.transaction(function(tx) {
+				tx.executeSql('SELECT * FROM TB_ALIMENTOS', [], function (tx, results4) { 
+					var n = results4.rows.length;
+					for(var i = 0;i < n;i++) {
+						var botaoAlimento = results4.rows.item(i);
+						if(botaoAlimento.id == alimento){
+							tx.executeSql('INSERT INTO TB_REFEICOES(titulo, calorias) VALUES (?, ?)', 
+								[botaoAlimento.alimento,botaoAlimento.calorias], function(tx, results2) {
+									alert("Refeição cadastrada com sucesso!");
+									window.location.href = 'painelControle.html';
+							});
+						}
+					}
+				});
+			});
+		}
+
+		</script>
+	</body>
+</html>

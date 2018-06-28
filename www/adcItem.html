@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Nunito" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+		<title>Adicionar Alimento</title>
+	</head>
+	<body class="page">
+		<div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+			<div class="toolbar__left toolbar-centralizar" >
+				<span class="toolbar-button"><a href="painelControle.html"><img class="imgBack" src="img/back.png" style="padding-top:10px;"></a></span>
+			</div>
+
+			<div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+			<div class="toolbar__right toolbar-centralizar">
+				<span class="toolbar-button" id="enviarAlimento"><img src="img/checked-user.png" style="padding-top:10px;"></span>
+			</div>
+		</div>
+		<form id="form-alimento" data-parsley-validate="">
+			<ul class="list list--material">
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header" style="padding-top:60px;">Alimento
+						<div class="list-item__subtitle list-item--material__subtitle">Obrigatório</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material textoAdc form-control" placeholder="ex: Arroz branco" type="text" id="alimento" style="padding: 20px 20px; width:100%" required="" ></div>
+				</span>
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Marca
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>
+					</div>
+				</li>		
+				<span>
+					<div><input class="text-input text-input--material textoAdc" placeholder="ex: Carreteiro" type="text" id="marca" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Tamanho da porção
+						<div class="list-item__subtitle list-item--material__subtitle">Obrigatório</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material textoAdc form-control" placeholder="ex: 1" type="text"  id="tamPorcao" style="padding: 20px 20px; width:100%" required=""></div>
+				</span>
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Número de porções
+						<div class="list-item__subtitle list-item--material__subtitle">Obrigatório</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material textoAdc form-control" placeholder="1" type="text" id="numPorcoes" style="padding: 20px 20px; width:100%;" required=""></div>
+				</span>
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Calorias
+						<div class="list-item__subtitle list-item--material__subtitle">Obrigatório</div>				
+					</div>
+				</li>		
+				<span>
+					<div><input class="text-input text-input--material form-control" placeholder="100" type="text"  id="calorias" style="padding-left: 20px; padding-bottom: 30px; padding-top: 10px; width:100%" required=""></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Carboidratos totais (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 5" type="text" id="carbo" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Proteínas (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 5" type="text" id="prot" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Gordura total (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 10" type="text" id="gordTot" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Gorduras saturadas (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="gordSat" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Gorduras poliinsaturadas (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="gordPoli" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Monoinsaturado (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="monoinsat" style="padding: 20px 20px; width:100%"></div>
+				</span>
+
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Gorduras trans (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="gordTrans" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Colesterol (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="colest" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Sódio (mg)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="sodio" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Potássio (mg)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="potassio" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Fibras alimentares (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="fibras" style="padding: 20px 20px; width:100%"></div>
+				</span> 
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Açúcares (g)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="acucar" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Vitamina A (%)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="vitA" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Vitamina C (%)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="vitC" style="padding: 20px 20px; width:100%"></div>
+				</span>
+
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Cálcio (%)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="calcio" style="padding: 20px 20px; width:100%"></div>
+				</span>
+				
+				<li class="list-item">
+					<div class="list-item__title list-item--material__title css-header">Ferro (%)
+						<div class="list-item__subtitle list-item--material__subtitle">Opcional</div>				
+					</div>
+				</li>
+				<span>
+					<div><input class="text-input text-input--material" placeholder="ex: 0" type="text" id="ferro" style="padding: 20px 20px; width:100%"></div>
+				</span>
+			</ul>
+			<button type="submit" id="escondido" style="display:none;" ></button>
+		</form>
+
+		<script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/parsley.min.js"></script>
+		<script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="js/conexaoBD.js"></script>
+		<script>
+			$("#enviarAlimento").on("click", function () {
+				$("#escondido").trigger("click");
+			});
+		</script>
+	</body>
+</html>
