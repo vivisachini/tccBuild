@@ -11,7 +11,7 @@ function onDeviceReady() {
 		
 function popularBD(tx) {
 	tx.executeSql('CREATE TABLE IF NOT EXISTS TB_USUARIOS ' +
-		'(id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, senha TEXT, email TEXT, dataNasc TEXT, altura REAL, pesoAtual REAL, pesoDesejado REAL)');
+		'(id INTEGER PRIMARY KEY AUTOINCREMENT, nome TEXT, senha TEXT, email TEXT, emaildois TEXT, respSeg TEXT)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS TB_ALIMENTOS ' +
 		'(id INTEGER PRIMARY KEY AUTOINCREMENT, alimento TEXT, marca TEXT, tamPorcao REAL, numPorcoes REAL, calorias REAL, carbo REAL, prot REAL, gordTot REAL, gordSat REAL, gordPoli REAL, monoinsat REAL, gordTrans REAL, colest REAL, sodio REAL, potassio REAL, fibras REAL, acucar REAL, vitA REAL, vitC REAL, calcio REAL, ferro REAL)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS TB_RECEITAS' +
@@ -20,6 +20,8 @@ function popularBD(tx) {
 		'(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, calorias REAL)');
 	tx.executeSql('CREATE TABLE IF NOT EXISTS TB_DIARIO' +
 		'(id INTEGER PRIMARY KEY AUTOINCREMENT, titulo TEXT, calorias REAL)');
+	tx.executeSql('CREATE TABLE IF NOT EXISTS TB_CALORIAS' +
+		'(id INTEGER PRIMARY KEY AUTOINCREMENT, calorias REAL)');
 
 	tx.executeSql('DELETE FROM TB_ALIMENTOS', []);
 	tx.executeSql('DELETE FROM TB_RECEITAS', []);
@@ -165,29 +167,33 @@ $('body').on('submit','#form-usuario',function(e){
 	  $('.bs-callout-warning').toggleClass('hidden', ok);
 	})
 	.on('form:submit', function() {
-	  criarNovoUsuario();
+		var email = $('#email').val();
+		var email2 = $('#emaildois').val();
+		if(email == email2){
+			criarNovoUsuario();
+		}else{
+			alert("A confirmação de e-mail não corresponde com o e-mail previamente digitado.");
+		}
 	});
 });
 
 function criarNovoUsuario() {
-
 	usuario = {
 		id: 0,
 		nome: $('#nome').val(),
 		senha: $('#senha').val(),
 		email: $('#email').val(),
-		dataNasc: $('#dataNasc').val(),
-		altura: $('#altura').val(),
-		pesoAtual: $('#pesoAtual').val(),
-		pesoDesejado: $('#pesoDesejado').val()
+		emaildois: $('#emaildois').val(),
+		respSeg: $('#respSeg').val()
 	};
 	addUsuarioBD(usuario);
 }	
 					
 function addUsuarioBD(usuario) {
 	bd.transaction(function(tx) {
-		tx.executeSql('INSERT INTO TB_USUARIOS(nome, senha, email, dataNasc, altura, pesoAtual, pesoDesejado) VALUES (?, ?, ?, ?, ?, ?, ?)', 
-			[usuario.nome, usuario.senha, usuario.email, usuario.dataNasc, usuario.altura, usuario.pesoAtual, usuario.pesoDesejado], function(tx, results1) {
+		console.log("entrou nessa bosta");
+		tx.executeSql('INSERT INTO TB_USUARIOS(nome, senha, email, emaildois, respSeg) VALUES (?, ?, ?, ?, ?)', 
+			[usuario.nome, usuario.senha, usuario.email, usuario.emaildois, usuario.respSeg], function(tx, results1) {
 				alert("Usuário cadastrado com sucesso!");
 				window.location.href = 'login.html';
 		});

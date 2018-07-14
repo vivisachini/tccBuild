@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html>
+    <head>
+		<meta charset="UTF-8">
+        <meta name="format-detection" content="telephone=no">
+        <meta name="msapplication-tap-highlight" content="no">
+        <meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width">
+		<link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Slabo+27px" rel="stylesheet">
+		<link href="https://fonts.googleapis.com/css?family=Quicksand" rel="stylesheet">
+		<link rel="stylesheet" type="text/css" href="css/index.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsenui.css">
+		<link rel="stylesheet" type="text/css" href="onsenui/css/onsen-css-components.min.css">
+        <title>Cadastro</title>
+    </head>
+    <body class="page">
+		<div class="toolbar css-toolbar" style="background-color: #ff7f50; border-bottom: 3px solid #596275; position: fixed;">
+			<div class="toolbar__left toolbar-centralizar" >
+				<span class="toolbar-button"><a href="login.html"><img class="imgBack" src="img/back.png" style="padding-top:10px;"></a></span>
+			</div>
+
+			<div class="toolbar__center toolbar-centralizar" style="color:white;">Nutrição & Ajuda</div>
+
+			<div class="toolbar__right toolbar-centralizar">
+				<span class="toolbar-button" id="registrarUsuario"><img src="img/checked-user.png" style="padding-top:10px;" onclick="validaResp();"></span>
+            </div>
+        </div>
+
+        <ul class="list" id="perguntaSeguranca">
+            <li class="list-item">
+                <div class="list-item__title list-item--material__title css-header" style="padding-top:60px;">Qual o primeiro e segundo nome da sua mãe: </div>
+            </li>		
+            <span>
+                <div><input class="text-input text-input--material textoAdc form-control" placeholder="ex: Maria da Silva" type="text" id="respSeg" style="padding: 20px 20px; width:100%" required=""></div>
+            </span>
+
+            <div id="novaSenha" style="display: none;">
+                <li class="list-item">
+                    <div class="list-item__title list-item--material__title css-header">Digite a nova senha: </div>
+                </li>		
+                <span>
+                    <div><input class="text-input text-input--material textoAdc form-control" placeholder="ex: Maria123" type="text" id="senhaNova" style="padding: 20px 20px; width:100%" required=""></div>
+                </span>
+                <button id="enviarSenha" class="botaoAlteraSenha" onclick="salvarNovaSenha();">Alterar Senha</button>
+            </div>
+        </ul>
+
+        <script type="text/javascript" src="js/jquery-3.3.1.min.js"></script>
+		<script type="text/javascript" src="js/parsley.min.js"></script>
+		<script type="text/javascript" src="cordova.js"></script>
+		<script type="text/javascript" src="onsenui/js/onsenui.min.js"></script>
+		<script type="text/javascript" src="js/index.js"></script>
+        <script type="text/javascript" src="js/conexaoBD.js"></script>
+        <script>
+        
+        function validaResp() {
+            var respostaSeguranca = $('#respSeg').val();
+            bd.transaction(function(tx) {
+				tx.executeSql('SELECT * FROM TB_USUARIOS WHERE respSeg=?', [respostaSeguranca], function (tx, results) { 
+					var n = results.rows.length;
+					for(var i = 0;i < n;i++) {
+						var listaUsuarios = results.rows.item(i);
+						if(respostaSeguranca == listaUsuarios.respSeg){
+                            $("#novaSenha").css("display", "block");
+						}
+					}
+					if(results.rows.length == 0){
+						alert("Resposta não cadastrada. Tente novamente.");
+					}
+				});
+			});
+        }
+
+        function salvarNovaSenha(){
+            var respostaSeguranca = $('#respSeg').val();
+            var novaSenha = $('#senhaNova').val();
+            bd.transaction(function(tx) {    
+                tx.executeSql('SELECT * FROM TB_USUARIOS WHERE respSeg=?', [respostaSeguranca], function (tx, results) { 
+				    var n = results.rows.length;
+					for(var i = 0;i < n;i++) {
+                        var listaUsuarios = results.rows.item(i);
+						if(respostaSeguranca == listaUsuarios.respSeg){
+                            //tx.executeSql('INSERT OR REPLACE INTO TB_USUARIOS(senha) VALUES (?)', [novaSenha], function(tx, results1) {
+                            tx.executeSql('UPDATE TB_USUARIOS SET senha=?  WHERE respSeg=?', [novaSenha, respostaSeguranca], function(tx, results1) {
+                                alert("Senha alterada com sucesso!");
+                                window.location.href = 'login.html';
+                            });
+                        }
+                    }
+                });
+            });
+        }
+        </script>
+	</body>
+</html>

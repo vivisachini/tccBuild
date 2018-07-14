@@ -6,7 +6,7 @@
 	background:url("../img/fundoPrincipal.jpg");
 	background-size:cover;
 }
-#telaLogin{
+.telaLogin{
 	background:url("../img/fundoLogin.jpg");
 	background-size:cover;
 }
@@ -183,5 +183,16 @@ ul {
 	background: #0c2461;
 	color: white;
 	padding: 10px 25px;
-	
+}
+.botaoAlteraSenha{
+	width:90%;
+	margin-top: 20px;
+	margin-bottom: 20px;
+	border:0;
+	border-radius:2px;
+	text-transform:uppercase;
+	background: #0c2461;
+	color: white;
+	margin-left: 20px;
+	padding: 10px 25px;
 }

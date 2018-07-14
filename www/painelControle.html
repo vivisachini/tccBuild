@@ -43,6 +43,10 @@
 					Diário: Alimentos Consumidos
 				</li>
 
+				<li id="caloriasDiarioLI" style="display: none;" class="list-header list-header--material">
+					<div style="font-weight: bold;font-size: 20px;color: #0a3d62;" id="caloriasDiario">Calorias totais consumidas:</div>
+				</li>
+
 				<li id="itemDiario" style="display: none;">
 					<div class="botaoLista"><button class="designBotao2" id="deletar" onclick="deletarAlimento(this.id)"> X </button></div>
 					<div class="tituloLista" id="tituloRefeicao">Teste</div>
@@ -72,18 +76,38 @@
 
 			bd.transaction(function(tx) {
 				tx.executeSql('SELECT * FROM TB_REFEICOES', [], function (tx, results2) { 
+					var caloriasDia = 0;
 					var n = results2.rows.length;
 					for(var i = 0;i < n;i++) {
 						var listaAlimentos = results2.rows.item(i);
+						caloriasDia += listaAlimentos.calorias;
+						tx.executeSql('INSERT OR REPLACE INTO TB_CALORIAS(id,calorias) VALUES (?,?)', [1,caloriasDia]);
 						var clone = $('#esconderPainel li#itemDiario').clone().removeAttr('id').appendTo('#esconderPainel ul#refeicoes').show();
 						clone.find('button#deletar').attr('id', 'deleteReceita' + listaAlimentos.id);
 						clone.find('#tituloRefeicao').attr('id', 'tituloAlimento' + listaAlimentos.id).text(listaAlimentos.titulo);
 						clone.find('#caloriasRefeicao').attr('id', 'caloriasAlimento' + listaAlimentos.id).text(listaAlimentos.calorias + ' calorias');
 						var clone2 = $('#esconderPainel li#separador').clone().removeAttr('id').appendTo('#esconderPainel ul#refeicoes').show();
-                    	clone.find('.separador').attr('id', 'separador' + listaAlimentos.id);
+						clone2.find('.separador').attr('id', 'separador' + listaAlimentos.id);
+						/*if(i == n-1){
+							
+						}*/
 					}
 				});
 			});
+
+			bd.transaction(function(tx) {
+				tx.executeSql('SELECT calorias FROM TB_CALORIAS WHERE id=1', [], function (tx, results5) { 
+					var nCal = results5.rows.length;
+					for(var j=0; j<nCal; j++){
+						var listaCal = results5.rows.item(j);
+						console.log(listaCal.calorias);
+						var clone = $('#esconderPainel li#caloriasDiarioLI').clone().removeAttr('id').appendTo('#esconderPainel ul#refeicoes').show();
+						clone.find('#caloriasDiario').attr('id', 'caloriasTot' + listaCal.id).text('Calorias totais consumidas: ' + listaCal.calorias);
+					}
+				});
+			});
+
+
 
 			function deletarAlimento(valor) {
 				var deletar = valor;
